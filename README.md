@@ -1,38 +1,74 @@
 # Vitor Rodrigues — Portfólio
 
-Portfólio pessoal desenvolvido com Next.js, TypeScript e TailwindCSS. Apresenta serviços, projetos e formas de contato de maneira moderna e cinematográfica.
+Portfólio pessoal desenvolvido com Next.js, TypeScript e TailwindCSS.
+
+Este projeto foi criado como parte da minha evolução prática em desenvolvimento front-end, UX/UI e experiências digitais modernas. A ideia não era apenas “fazer um site”, mas construir uma experiência visual real, aplicando estudos de design, motion, responsividade e arquitetura de interface em um projeto autoral.
+
+O foco do projeto é unir:
+
+* interfaces modernas
+* experiência cinematográfica
+* microinterações
+* performance
+* identidade visual
+* desenvolvimento front-end
+
+---
 
 ## Stack
 
-- **Framework:** Next.js 16 (App Router)
-- **Linguagem:** TypeScript
-- **Estilização:** TailwindCSS v4
-- **Animações:** Framer Motion
-- **Deploy:** Vercel
+* Next.js 16
+* TypeScript
+* TailwindCSS v4
+* Framer Motion
+* Vercel
+
+---
 
 ## Estrutura
 
+```bash
+app/            # Estrutura principal da aplicação
+components/     # Componentes reutilizáveis
+sections/       # Seções da landing page
+lib/            # Funções utilitárias
+types/          # Tipagens compartilhadas
+public/         # Imagens, vídeos e assets
 ```
-├── app/               # Layout raiz, metadados e estilos globais
-├── components/        # Componentes reutilizáveis (Navbar, Cards, Cursor…)
-│   └── cards/         # Cards de serviço com animações interativas
-├── sections/          # Seções da landing page (Hero, About, Services…)
-├── lib/               # Utilitários (cn, formatWhatsAppUrl)
-├── types/             # Tipos TypeScript compartilhados
-└── public/
-    └── images/        # Fotos, logos e vídeos
-```
+
+---
 
 ## Funcionalidades
 
-- Intro cinematográfico com animação de texto
-- Cursor personalizado com efeito magnético
-- Alternância de tema claro/escuro (sem flash no carregamento)
-- Carousel de fotos com Ken Burns e progresso automático
-- Bento grid de serviços com modais animados
-- Scroll suave com indicador de seção ativa na navbar
-- SEO completo com Open Graph e Twitter Cards
-- Totalmente responsivo (mobile-first)
+* Intro cinematográfica
+* Tema claro/escuro
+* Cursor customizado
+* Scroll suave
+* Bento grid interativo
+* Carousel animado
+* SEO configurado
+* Responsividade mobile-first
+
+---
+
+## Processo de desenvolvimento
+
+Este projeto também representa meu processo de aprendizado prático.
+
+Utilizei IA como ferramenta de apoio em:
+
+* refinamentos visuais
+* brainstorms
+* otimizações
+* UX writing
+* organização estrutural
+* experimentações
+
+Mas todas as decisões de direção visual, identidade, experiência e construção do projeto fazem parte do meu processo de evolução como desenvolvedor.
+
+O objetivo nunca foi apenas gerar um site automaticamente, mas utilizar IA como apoio para acelerar aprendizado, testes e refinamentos reais.
+
+---
 
 ## Rodando localmente
 
@@ -41,23 +77,24 @@ npm install
 npm run dev
 ```
 
-Abra [http://localhost:3000](http://localhost:3000) no navegador.
+Acesse:
 
-## Scripts disponíveis
+```bash
+http://localhost:3000
+```
 
-| Comando         | Descrição                          |
-|-----------------|------------------------------------|
-| `npm run dev`   | Servidor de desenvolvimento        |
-| `npm run build` | Build de produção                  |
-| `npm run start` | Inicia o servidor de produção      |
-| `npm run lint`  | Executa o linter (next lint)       |
+---
 
 ## Deploy
 
-O projeto está configurado para deploy na [Vercel](https://vercel.com). Cada push na branch `main` dispara um novo deploy automaticamente.
+O deploy do projeto é realizado via Vercel, utilizando integração automática com GitHub para publicação e atualização contínua da aplicação em ambiente real de produção.
+
+---
 
 ## Contato
 
-- **LinkedIn:** [Vitor Rodrigues](https://www.linkedin.com/in/vitor-rodrigues-da-silva/)
-- **GitHub:** [@vitorrodrigues-dev](https://github.com/vitorrodrigues-dev)
-- **Instagram:** [@devvitor7](https://www.instagram.com/devvitor7/)
+GitHub:
+@vitorrodrigues-dev
+
+Instagram:
+@devvitor7
