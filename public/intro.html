@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vitor Rodrigues</title>
+  <style>
+    /* ─── Reset ──────────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --amber:      #d4a550;
+      --amber-mid:  rgba(212, 165,  80, 0.65);
+      --amber-soft: rgba(212, 165,  80, 0.22);
+      --white:      #f8f4ee;
+      --ease:       cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: #000;
+      color: var(--white);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Hero (revealed after intro) ──────────────────────────────────── */
+    #hero {
+      position: fixed; inset: 0; z-index: 1;
+      background:
+        radial-gradient(ellipse 90% 70% at 50% 52%,
+          rgba(14, 9, 3, 1) 0%,
+          rgba(4, 3, 6, 1) 55%,
+          #000 100%);
+    }
+
+    /* ─── Intro overlay ─────────────────────────────────────────────────── */
+    #intro {
+      position: fixed; inset: 0; z-index: 100;
+      background: #000;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Warm glow behind the line */
+    #intro-glow {
+      position: absolute; inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 80% 55% at 50% 51%,
+          rgba(22, 13, 4, 1)   0%,
+          rgba(10,  6, 2, 0.9) 45%,
+          transparent          75%);
+      opacity: 0;
+      will-change: opacity;
+    }
+
+    /* Film grain */
+    #intro-grain {
+      position: absolute; inset: 0;
+      pointer-events: none;
+      opacity: 0.035;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ─── Horizontal luminous line ──────────────────────────────────────── */
+    #line-wrap {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -0.5px);
+      width: 0; height: 1px;
+      will-change: width;
+    }
+
+    #line-core {
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        90deg,
+        transparent                     0%,
+        rgba(212, 165,  80, 0.25)        7%,
+        rgba(212, 165,  80, 0.85)       30%,
+        rgba(255, 248, 220, 0.97)       50%,
+        rgba(212, 165,  80, 0.85)       70%,
+        rgba(212, 165,  80, 0.25)       93%,
+        transparent                    100%
+      );
+      box-shadow:
+        0 0   3px rgba(212, 165,  80, 1.0),
+        0 0  10px rgba(212, 165,  80, 0.85),
+        0 0  30px rgba(212, 165,  80, 0.55),
+        0 0  80px rgba(212, 165,  80, 0.25),
+        0 0 140px rgba(212, 165,  80, 0.10);
+    }
+
+    /* ─── Particles ─────────────────────────────────────────────────────── */
+    #particles {
+      position: absolute; inset: 0;
+      pointer-events: none;
+    }
+
+    .spark {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    @keyframes spark-float {
+      0%   { opacity: var(--o, 0.85); transform: translate(0, 0) scale(1);     }
+      100% { opacity: 0;              transform: translate(var(--dx), var(--dy)) scale(0.05); }
+    }
+
+    /* ─── Content block ─────────────────────────────────────────────────── */
+    #intro-content {
+      position: relative; z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 0;
+      /* push the block slightly above the horizon line */
+      transform: translateY(-18px);
+    }
+
+    /* Logo */
+    #intro-logo {
+      height: 120px;
+      width: auto;
+      opacity: 0;
+      transform: translateY(6px) scale(0.96);
+      filter: drop-shadow(0 0 24px rgba(212, 165, 80, 0.28));
+      will-change: opacity, transform, filter;
+      margin-bottom: 32px;
+    }
+
+    /* Title */
+    #intro-title {
+      font-family: 'Georgia', 'Palatino Linotype', serif;
+      font-size: clamp(44px, 8vw, 96px);
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      color: var(--white);
+      line-height: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .title-word {
+      display: flex;
+      overflow: hidden;
+      padding-bottom: 0.08em; /* prevent descender clip */
+    }
+
+    .char {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(18px);
+      will-change: opacity, transform;
+    }
+
+    /* Subtitle */
+    #intro-sub {
+      font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+      font-size: clamp(10px, 1.35vw, 13px);
+      font-weight: 400;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--amber);
+      opacity: 0;
+      transform: translateY(9px);
+      will-change: opacity, transform;
+      margin-bottom: 28px;
+    }
+
+    /* Thin horizontal divider */
+    #intro-rule {
+      width: 0;
+      height: 1px;
+      background: linear-gradient(
+        90deg, transparent, var(--amber-mid), transparent
+      );
+      will-change: width;
+      margin-bottom: 32px;
+    }
+
+    /* CTA */
+    #intro-cta {
+      font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(212, 165, 80, 0.88);
+      background: transparent;
+      border: 1px solid rgba(212, 165, 80, 0.32);
+      padding: 14px 44px;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(9px);
+      will-change: opacity, transform;
+      transition: border-color 0.3s, color 0.3s;
+    }
+
+    #intro-cta:hover {
+      border-color: rgba(212, 165, 80, 0.65);
+      color: rgba(255, 248, 220, 0.98);
+    }
+
+    #intro-cta:focus-visible {
+      outline: 1px solid rgba(212, 165, 80, 0.5);
+      outline-offset: 4px;
+    }
+
+    /* ─── Intro exit ─────────────────────────────────────────────────────── */
+    #intro.exiting {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.85s var(--ease);
+    }
+
+    /* ─── Line breathe (ambient) ─────────────────────────────────────────── */
+    @keyframes line-breathe {
+      0%, 100% { opacity: 1.0; }
+      50%       { opacity: 0.72; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero behind the intro -->
+  <div id="hero"></div>
+
+  <!-- Cinematic intro -->
+  <div id="intro" aria-hidden="true">
+
+    <div id="intro-grain"></div>
+    <div id="intro-glow"></div>
+
+    <!-- The luminous horizon line -->
+    <div id="line-wrap">
+      <div id="line-core"></div>
+    </div>
+
+    <!-- Particle canvas (DOM-based) -->
+    <div id="particles"></div>
+
+    <!-- Content -->
+    <div id="intro-content">
+
+      <img
+        id="intro-logo"
+        src="./images/logo-modo-escuro-PNG-4X.png"
+        alt="Vitor Rodrigues"
+        draggable="false"
+        onerror="this.style.display='none'"
+      />
+
+      <h1 id="intro-title" aria-label="Vitor Rodrigues">
+        <span class="title-word" id="word-vitor"></span>
+        <span class="title-word" id="word-rodrigues"></span>
+      </h1>
+
+      <p id="intro-sub">Desenvolvedor Full Stack</p>
+
+      <div id="intro-rule"></div>
+
+      <button id="intro-cta" onclick="skipIntro()">
+        Entrar no portfólio
+      </button>
+
+    </div>
+  </div>
+
+  <script>
+    "use strict";
+
+    /* ─── Utils ────────────────────────────────────────────────────────── */
+    const E = (id) => document.getElementById(id);
+    const EASE = "cubic-bezier(0.4, 0, 0.2, 1)";
+
+    function wait(ms) {
+      return new Promise((res) => setTimeout(res, ms));
+    }
+
+    function easeOut(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+
+    /* ─── Elements ─────────────────────────────────────────────────────── */
+    const intro      = E("intro");
+    const introGlow  = E("intro-glow");
+    const lineWrap   = E("line-wrap");
+    const lineCore   = E("line-core");
+    const particles  = E("particles");
+    const introLogo  = E("intro-logo");
+    const introSub   = E("intro-sub");
+    const introRule  = E("intro-rule");
+    const introCta   = E("intro-cta");
+
+    /* ─── Build title: letter by letter ───────────────────────────────── */
+    const WORDS = [
+      { id: "word-vitor",     text: "Vitor" },
+      { id: "word-rodrigues", text: "Rodrigues" },
+    ];
+
+    const allChars = [];
+
+    WORDS.forEach(({ id, text }) => {
+      const container = E(id);
+      [...text].forEach((ch) => {
+        const span = document.createElement("span");
+        span.className = "char";
+        span.textContent = ch;
+        span.setAttribute("aria-hidden", "true");
+        container.appendChild(span);
+        allChars.push(span);
+      });
+    });
+
+    /* ─── Particle system ──────────────────────────────────────────────── */
+    function spawnSpark(x, y, opts = {}) {
+      const size = opts.size  ?? (Math.random() * 2.2 + 0.6);
+      const dx   = opts.dx   ?? (Math.random() - 0.5) * 28;
+      const dy   = opts.dy   ?? -(Math.random() * 44 + 10);
+      const dur  = opts.dur  ?? (Math.random() * 650 + 380);
+      const op   = opts.op   ?? (Math.random() * 0.5 + 0.5);
+      const warm = opts.warm ?? true;
+
+      const el = document.createElement("div");
+      el.className = "spark";
+
+      const col = warm
+        ? `rgba(212, 165, 80, ${op})`
+        : `rgba(255, 248, 220, ${op})`;
+      const glow = `
+        0 0 ${size * 2.5}px rgba(212, 165, 80, 0.9),
+        0 0 ${size * 6  }px rgba(212, 165, 80, 0.4)`;
+
+      el.style.cssText = `
+        left: ${x - size / 2}px;
+        top:  ${y - size / 2}px;
+        width: ${size}px; height: ${size}px;
+        background: ${col};
+        box-shadow: ${glow};
+        --dx: ${dx}px; --dy: ${dy}px; --o: ${op};
+        animation: spark-float ${dur}ms ${EASE} forwards;
+      `;
+
+      particles.appendChild(el);
+      setTimeout(() => el.remove(), dur + 80);
+    }
+
+    /* First burst — centered white-hot sparks when line ignites */
+    function burstIgnition() {
+      const cy = window.innerHeight / 2;
+      const cx = window.innerWidth  / 2;
+      for (let i = 0; i < 16; i++) {
+        const spread = (i / 16 - 0.5) * window.innerWidth * 0.5;
+        spawnSpark(cx + spread, cy + (Math.random() - 0.5) * 5, {
+          size:  Math.random() * 3 + 1,
+          dx:    (Math.random() - 0.5) * 18,
+          dy:    Math.random() > 0.65
+                   ? Math.random() * 22 + 4
+                   : -(Math.random() * 46 + 12),
+          dur:   Math.random() * 500 + 320,
+          op:    Math.random() * 0.3 + 0.7,
+          warm:  false,
+        });
+      }
+    }
+
+    /* Ambient spread along the full line */
+    function spreadParticles(count) {
+      const cy = window.innerHeight / 2;
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          const x = Math.random() * window.innerWidth;
+          spawnSpark(x, cy + (Math.random() - 0.5) * 6, {
+            size:  Math.random() * 1.8 + 0.5,
+            dy:    Math.random() > 0.62
+                     ? Math.random() * 24 + 6
+                     : -(Math.random() * 38 + 8),
+            dur:   Math.random() * 700 + 350,
+            warm:  true,
+          });
+        }, i * 22);
+      }
+    }
+
+    /* ─── Reveal helpers ───────────────────────────────────────────────── */
+    function show(el, { delay = 0, dur = 700, ty = 0, scale = 1 } = {}) {
+      return new Promise((res) => {
+        setTimeout(() => {
+          el.style.transition = [
+            `opacity ${dur}ms ${EASE}`,
+            `transform ${dur}ms ${EASE}`,
+          ].join(", ");
+          el.style.opacity   = "1";
+          el.style.transform = `translateY(0) scale(${scale})`;
+          setTimeout(res, dur);
+        }, delay);
+      });
+    }
+
+    function revealChars(chars, stagger = 46) {
+      chars.forEach((ch, i) => {
+        setTimeout(() => {
+          ch.style.transition = `opacity 0.48s ${EASE}, transform 0.48s ${EASE}`;
+          ch.style.opacity    = "1";
+          ch.style.transform  = "translateY(0)";
+        }, i * stagger);
+      });
+      return wait(chars.length * stagger + 380);
+    }
+
+    /* ─── Main animation sequence ──────────────────────────────────────── */
+    let aborted = false;
+    let loopId  = null;
+
+    async function runIntro() {
+
+      /* 0 ms — pure black */
+      await wait(180);
+      if (aborted) return;
+
+      /* — Line expands from center — */
+      lineWrap.style.transition = `width 0.78s ${EASE}`;
+      requestAnimationFrame(() => {
+        lineWrap.style.width = "100vw";
+      });
+
+      /* Ignition burst immediately */
+      burstIgnition();
+
+      /* More particles as line spreads */
+      await wait(160);
+      spreadParticles(28);
+
+      /* — Background warms — */
+      await wait(180);
+      if (aborted) return;
+      introGlow.style.transition = `opacity 1.9s ${EASE}`;
+      introGlow.style.opacity = "1";
+
+      /* Line settles into gentle breathe */
+      await wait(350);
+      lineCore.style.animation = "line-breathe 3s ease-in-out infinite";
+
+      /* Secondary ambient sparks */
+      spreadParticles(14);
+
+      /* — Logo — */
+      await wait(120);
+      if (aborted) return;
+      introLogo.style.transition = [
+        `opacity   0.95s ${EASE}`,
+        `transform 0.95s ${EASE}`,
+        `filter    0.95s ${EASE}`,
+      ].join(", ");
+      introLogo.style.opacity   = "1";
+      introLogo.style.transform = "translateY(0) scale(1)";
+      introLogo.style.filter    = "drop-shadow(0 0 28px rgba(212,165,80,0.35))";
+
+      await wait(260);
+      if (aborted) return;
+
+      /* — Title: letter by letter — */
+      await revealChars(allChars, 46);
+      if (aborted) return;
+
+      /* — Subtitle — */
+      introSub.style.transition = `opacity 0.7s ${EASE}, transform 0.7s ${EASE}`;
+      introSub.style.opacity   = "0.88";
+      introSub.style.transform = "translateY(0)";
+
+      await wait(340);
+      if (aborted) return;
+
+      /* — Thin rule — */
+      introRule.style.transition = `width 0.9s ${EASE}`;
+      introRule.style.width = "72px";
+
+      await wait(280);
+      if (aborted) return;
+
+      /* — CTA — */
+      introCta.style.transition = `opacity 0.7s ${EASE}, transform 0.7s ${EASE}`;
+      introCta.style.opacity   = "1";
+      introCta.style.transform = "translateY(0)";
+
+      /* — Ambient particle loop — */
+      loopId = setInterval(() => {
+        if (aborted) { clearInterval(loopId); return; }
+        spreadParticles(4 + Math.floor(Math.random() * 3));
+      }, 1500);
+    }
+
+    /* ─── Skip / exit ──────────────────────────────────────────────────── */
+    function skipIntro() {
+      aborted = true;
+      if (loopId) clearInterval(loopId);
+      intro.classList.add("exiting");
+      setTimeout(() => { intro.style.display = "none"; }, 900);
+    }
+
+    /* ─── Start ────────────────────────────────────────────────────────── */
+    runIntro();
+  </script>
+</body>
+</html>

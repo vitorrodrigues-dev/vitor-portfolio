@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vitor Rodrigues — Portfólio
 
-## Getting Started
+Portfólio pessoal desenvolvido com Next.js, TypeScript e TailwindCSS. Apresenta serviços, projetos e formas de contato de maneira moderna e cinematográfica.
 
-First, run the development server:
+## Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Framework:** Next.js 16 (App Router)
+- **Linguagem:** TypeScript
+- **Estilização:** TailwindCSS v4
+- **Animações:** Framer Motion
+- **Deploy:** Vercel
+
+## Estrutura
+
+```
+├── app/               # Layout raiz, metadados e estilos globais
+├── components/        # Componentes reutilizáveis (Navbar, Cards, Cursor…)
+│   └── cards/         # Cards de serviço com animações interativas
+├── sections/          # Seções da landing page (Hero, About, Services…)
+├── lib/               # Utilitários (cn, formatWhatsAppUrl)
+├── types/             # Tipos TypeScript compartilhados
+└── public/
+    └── images/        # Fotos, logos e vídeos
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Funcionalidades
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Intro cinematográfico com animação de texto
+- Cursor personalizado com efeito magnético
+- Alternância de tema claro/escuro (sem flash no carregamento)
+- Carousel de fotos com Ken Burns e progresso automático
+- Bento grid de serviços com modais animados
+- Scroll suave com indicador de seção ativa na navbar
+- SEO completo com Open Graph e Twitter Cards
+- Totalmente responsivo (mobile-first)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Rodando localmente
 
-## Learn More
+```bash
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Abra [http://localhost:3000](http://localhost:3000) no navegador.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts disponíveis
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Comando         | Descrição                          |
+|-----------------|------------------------------------|
+| `npm run dev`   | Servidor de desenvolvimento        |
+| `npm run build` | Build de produção                  |
+| `npm run start` | Inicia o servidor de produção      |
+| `npm run lint`  | Executa o linter (next lint)       |
 
-## Deploy on Vercel
+## Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+O projeto está configurado para deploy na [Vercel](https://vercel.com). Cada push na branch `main` dispara um novo deploy automaticamente.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Contato
+
+- **LinkedIn:** [Vitor Rodrigues](https://www.linkedin.com/in/vitor-rodrigues-da-silva/)
+- **GitHub:** [@vitorrodrigues-dev](https://github.com/vitorrodrigues-dev)
+- **Instagram:** [@devvitor7](https://www.instagram.com/devvitor7/)
